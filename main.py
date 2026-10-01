@@ -1,62 +1,54 @@
 from sys import argv
 from os import listdir
 
+import pandas as pd
+
 from src.instance import Instance
 from run import run
 
 n_runs = int(argv[1] if len(argv) > 1 else 5)
+n_neighbors = int(argv[2] if len(argv) > 2 else 3)
 
 instances = listdir('instances')
 sorted_instances = sorted(instances, key=lambda x: (int(x[3:5]), int(x[1]), x[0]))
 
-for instance in sorted_instances:
-    print(f' {instance} '.center(80, '-'))
+data: list[dict[str, str]] = []
+
+for name in sorted_instances:
+    print(f' {name} '.center(80, '-'))
     
-    for i in range(1, n_runs + 1):
-        columns += [f'Heuristic Time {i}', f'Solver Time {i}', f'KM+TO Distance {i}', f'KN+Solver Distance {i}', f'Vehicles {i}']
-
-    columns += ['KM+TO Time', 'KM+TO+KN+Solver Time']
-
-    new_df = pd.DataFrame(columns=columns)
-
-    for line in df.itertuples():
-        data = Data(f'instances/{group}/{line.Instance}.txt').load()
-        
-        km_to_times = []
-        kn_solver_times = []
-        km_costs = []
-        to_costs = []
-        solver_costs = []
-        vehicle_counts = []
-        
-        for i in range(n_runs):
-            km, to, kn, solver = main(data, 5)
-            
-            km_to_times.append(km[0] + to[0])
-            kn_solver_times.append(kn[0] + solver[0])
-            
-            km_costs.append(sum(route.cost for route in km[1]))
-            to_costs.append(sum(route.cost for route in to[1]))
-            solver_costs.append(sum(route.cost for route in solver[1]))
-            vehicle_counts.append(len(solver[1]))
+    instance = Instance(f'instances/{name}', precision=3)
     
-        dic = { 'Instance': line.Instance }
+    line: dict[str, str] = []
+    
+    for neighbors in range(1, n_neighbors + 1):
+        print(f'Running {neighbors} neighbors...')
         
-        for i in range(n_runs):
-            dic[f'KM+TO Time {i + 1}'] = round(km_to_times[i], 3)
-            dic[f'KM+TO+KN+Solver Time {i + 1}'] = round(km_to_times[i] + kn_solver_times[i], 3)
-            dic[f'KM+TO Distance {i + 1}'] = to_costs[i]
-            dic[f'KN+Solver Distance {i + 1}'] = solver_costs[i]
-            dic[f'Vehicles {i + 1}'] = vehicle_counts[i]
+        total_h_time = 0
+        h_cost = 0
+        total_neighbor_time = 0
+        total_solver_time = 0
+        solver_cost = 0
+        
+        for r in range(1, n_runs + 1):
+            print(f'Run {r} of {n_runs}...')
             
-        km_to_time_mean = sum(km_to_times) / n_runs
-        kn_solver_time_mean = sum(kn_solver_times) / n_runs
+            h_time, h_cost, neighbor_time, solver_time, solver_cost = run(instance, neighbors)
             
-        dic[f'KM+TO Time'] = round(km_to_time_mean, 3)
-        dic[f'KM+TO+KN+Solver Time'] = round(km_to_time_mean + kn_solver_time_mean, 3)
+            total_h_time += h_time
+            total_neighbor_time += neighbor_time
+            total_solver_time += solver_time
         
-        new_df.loc[len(new_df)] = dic
-        
-        print(f'Instance {line.Instance} processed')
+        h_time = total_h_time / n_runs
+        neighbor_time = total_neighbor_time / n_runs
+        solver_time = total_solver_time / n_runs
                 
-    new_df.to_csv(f'{group}_results.csv', index=False)
+        line[f'heuristic_time_k={neighbors}'] = round(h_time, 3)
+        line[f'heuristic_cost_k={neighbors}'] = h_cost
+        line[f'neighbors_time_k={neighbors}'] = round(neighbor_time, 3)
+        line[f'solver_time_k={neighbors}'] = round(solver_time, 3)
+        line[f'solver_cost_k={neighbors}'] = solver_cost
+                                                    
+    data.append(line)
+    
+    pd.DataFrame(data).to_csv('results.csv', index=False)

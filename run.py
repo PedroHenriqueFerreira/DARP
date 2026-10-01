@@ -8,22 +8,22 @@ from src.solver import Solver
 def run(instance: Instance, neighbors: int) -> None:
     initial_time, initial_solution = Heuristic(instance).run()
 
-    print(f'Greedy Heuristic Time: {initial_time:.3f} seconds')
-    print(f'Greedy Heuristic Solution: {initial_solution}') 
-    print(f'Greedy Heuristic Cost: {initial_solution.cost}') 
+    # print(f'Heuristic Time: {initial_time:.3f} seconds')
+    # print(f'Heuristic Solution: {initial_solution}') 
+    # print(f'Heuristic Cost: {initial_solution.cost}') 
 
     assert initial_solution.validate(), 'Initial solution is not valid'
 
     matrices_time, matrices = Neighbors(instance, neighbors, initial_solution).run()
 
-    print(f'Neighbors Heuristic Time: {matrices_time:.3f} seconds')
-    print(f'Neighbors Heuristic Matrices Shape: {len(matrices)} x {matrices[0].shape}')
+    # print(f'Neighbors Heuristic Time: {matrices_time:.3f} seconds')
+    # print(f'Neighbors Heuristic Matrices Shape: {len(matrices)} x {matrices[0].shape}')
 
     solver_time, solver_solution = Solver(instance, matrices).run()
     
-    print(f'Solver Time: {solver_time:.3f} seconds')
-    print(f'Solver Solution: {solver_solution}')
-    print(f'Solver Cost: {solver_solution.cost:.2f}')
+    # print(f'Solver Time: {solver_time:.3f} seconds')
+    # print(f'Solver Solution: {solver_solution}')
+    # print(f'Solver Cost: {solver_solution.cost:.2f}')
 
     assert solver_solution.validate(), 'Solver solution is not valid'
 
@@ -39,6 +39,14 @@ def run(instance: Instance, neighbors: int) -> None:
     # print(f'Solver Cost: {solver_solution.cost:.2f}')
     
     # print(solver_solution)
+    
+    return (
+        initial_time, 
+        initial_solution.cost, 
+        matrices_time, 
+        solver_time, 
+        solver_solution.cost
+    )
 
 if __name__ == '__main__':
     if len(argv) < 3:
