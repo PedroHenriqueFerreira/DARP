@@ -1,9 +1,8 @@
 import numpy as np
-from networkx import Graph, minimum_spanning_tree
 
 from src.instance import Instance
 from src.solution import Solution
-from src.utils import timer
+from src.timer import timer
 
 class Neighbors:
     ''' Neighborhood focused on the indivisibility of requests for the DARP '''

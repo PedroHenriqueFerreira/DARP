@@ -1,7 +1,6 @@
 import numpy as np
 
 from src.node import Node
-from src.utils import number
 
 class Instance:
     ''' Class representing a DARP instance.'''

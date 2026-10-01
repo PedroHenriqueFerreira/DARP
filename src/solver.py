@@ -6,7 +6,7 @@ import numpy as np
 from src.instance import Instance
 from src.route import Route
 from src.solution import Solution
-from src.utils import timer
+from src.timer import timer
 
 class Solver:
     """ Class for the DARP exact solver using PB / SAT encoding """

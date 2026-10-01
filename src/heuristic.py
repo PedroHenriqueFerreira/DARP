@@ -1,7 +1,6 @@
 from src.instance import Instance
-from src.node import Node
 from src.route import Route
-from src.utils import timer
+from src.timer import timer
 from src.solution import Solution
 
 class Heuristic:

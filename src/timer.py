@@ -1,8 +1,3 @@
-import numpy as np
-import matplotlib.pyplot as plt
-
-import numpy as np
-
 from time import time
 
 def timer(func):
@@ -19,6 +14,3 @@ def timer(func):
         return end - start, result
     
     return wrapper
-
-def number(value: str):
-    return float(value) if '.' in value else int(value)

@@ -2,14 +2,13 @@ from src.instance import Instance
 from src.route import Route
 
 class Solution:
+    ''' Class representing a DARP solution '''
+    
     def __init__(self, instance: Instance, routes: list[Route]):
         self.instance = instance
         
         self.routes = routes
         self._cost: float | None = None
-            
-    def __len__(self):
-        return len(self.routes)
     
     def validate(self) -> bool:
         all_nodes = [node.id for node in self.instance.nodes[1:-1]]
