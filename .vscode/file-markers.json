@@ -41,7 +41,8 @@
     "src/instance.py": "done",
     "src/node.py": "done",
     "src/route.py": "done",
-    "src/heuristic.py": "done"
+    "src/heuristic.py": "done",
+    "src/neighbors.py": "done"
   },
   "lineHighlightTypes": [
     {

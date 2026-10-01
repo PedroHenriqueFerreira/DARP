@@ -14,8 +14,6 @@ class Neighbors:
         self.solution = solution
     
     def is_edge_feasible(self, i: int, j: int) -> bool:
-        ''' Verify if the edge i -> j is temporally feasible '''
-        
         node_i = self.instance.nodes[i]
         node_j = self.instance.nodes[j]
         dist = self.instance.distances[i, j]
@@ -56,14 +54,14 @@ class Neighbors:
                 if self.is_edge_feasible(d, 0): 
                     matrix[d, 0] = self.instance.distances[d, 0]
 
-            # Garantir as arestas internas das rotas atuais que a heurística construtiva encontrou
+            # Guarantee the internal edges of the current routes that the constructive heuristic found
             if len(route) > 0:
                 matrix[0, route[0].id] = self.instance.distances[0, route[0].id]
                 matrix[route[-1].id, 0] = self.instance.distances[route[-1].id, 0]
             for i in range(len(route) - 1):
                 matrix[route[i].id, route[i + 1].id] = self.instance.distances[route[i].id, route[i + 1].id]
             
-            # Extrair as requisições já presentes na rota para expandir a vizinhança a partir delas
+            # Extract the requests already present in the route to expand the neighborhood from them
             active_reqs = set()
             for node in route:
                 if 1 <= node.id <= request_n: 
@@ -71,35 +69,43 @@ class Neighbors:
                 elif node.id > request_n: 
                     active_reqs.add(node.id - request_n)
             
-            # Se a rota estiver vazia, inicializamos o cluster com os K primeiros requests globais
+            # If the route is empty, we initialize the cluster with the first K global requests
             if not active_reqs:
                 active_reqs = set(range(1, min(self.k + 1, request_n + 1)))
             
-            # Expandir o cluster: Para cada requisição ativa, encontrar as K requisições mais próximas
+            # Expand the cluster: For each active request, find the K closest requests based on the defined distance metric
             expanded_reqs = set(active_reqs)
-            for r in active_reqs:
-                distances = [(self.requests_distance(r, other), other) for other in range(1, request_n + 1) if other != r]
+            for active_req in active_reqs:
+                distances = [
+                    (self.requests_distance(active_req, other_req), other_req) 
+                    for other_req in range(1, request_n + 1) if other_req != active_req
+                ]
+                
                 distances.sort()
+                
                 for _, other in distances[:self.k]:
                     expanded_reqs.add(other)
                     
-            # Ativar arestas APENAS entre os nós (p, d) do cluster de requisições expandidas
+            # Activate edges ONLY between the nodes (p, d) of the expanded request cluster
             valid_nodes = []
-            for r in expanded_reqs:
-                valid_nodes.extend([r, r + request_n])
+            for expanded_req in expanded_reqs:
+                valid_nodes.extend([expanded_req, expanded_req + request_n])
                 
-            # Garantir a precedência primária irrestrita de cada request (recolha -> entrega)
+            # Guarantee the primary precedence of each request (pickup -> delivery)
             for r in expanded_reqs:
                 d = r + request_n
                 if self.is_edge_feasible(r, d):
                     matrix[r, d] = self.instance.distances[r, d]
 
-            # Permutações de arestas cruzadas entre todos os nós validados no cluster temporal
+            # Permute edges between all validated nodes in the temporal cluster
             for i in valid_nodes:
                 for j in valid_nodes:
-                    if i == j: continue
-                    # Impede a aberração lógica de viajar da entrega de volta para a própria recolha
-                    if j == i - request_n: continue
+                    if i == j: 
+                        continue
+                    
+                    # Prevent the traveling from the delivery back to its own pickup
+                    if j == i - request_n: 
+                        continue
                     
                     if self.is_edge_feasible(i, j):
                         matrix[i, j] = self.instance.distances[i, j]
