@@ -19,12 +19,12 @@ for name in sorted_instances:
     
     instance = Instance(f'instances/{name}', precision=3)
     
-    line: dict[str, str] = []
+    line: dict[str, str] = {'Instance': name}
     
     for neighbors in range(1, n_neighbors + 1):
         print(f'Running {neighbors} neighbors...')
         
-        total_h_time = 0
+        to+tal_h_time = 0
         h_cost = 0
         total_neighbor_time = 0
         total_solver_time = 0
@@ -35,6 +35,7 @@ for name in sorted_instances:
             
             h_time, h_cost, neighbor_time, solver_time, solver_cost = run(instance, neighbors)
             
+        
             total_h_time += h_time
             total_neighbor_time += neighbor_time
             total_solver_time += solver_time
