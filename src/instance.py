@@ -33,9 +33,9 @@ class Instance:
             if i == 0: # First line contains instance configuration
                 self.vehicle_number = int(cfg[0])
                 self.request_number = int(cfg[1])
-                self.max_vehicle_time = round(float(cfg[2]) * 10 ** self.precision)
+                self.max_vehicle_time = int(round(float(cfg[2]) * 10 ** self.precision))
                 self.vehicle_capacity = int(cfg[3])
-                self.max_request_time = round(float(cfg[4]) * 10 ** self.precision)
+                self.max_request_time = int(round(float(cfg[4]) * 10 ** self.precision))
                 
             else: # Subsequent lines contain node information
                 self.nodes.append(Node(*cfg, precision=self.precision))
@@ -44,9 +44,9 @@ class Instance:
                 
         for i in range(len(self.nodes)):
             for j in range(i + 1, len(self.nodes)):
-                self.distances[i][j] = self.distances[j][i] = round(
+                self.distances[i][j] = self.distances[j][i] = int(round(
                     np.linalg.norm(self.nodes[i].pos - self.nodes[j].pos) * 10 ** self.precision
-                )
+                ))
     
         # Time window tightening
         for i in range(1, self.request_number + 1):

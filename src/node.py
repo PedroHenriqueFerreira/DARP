@@ -16,10 +16,10 @@ class Node:
     ):
         self.id = int(id)
         self.pos = np.array([float(x), float(y)])
-        self.service_time = round(service_time * 10 ** precision)
+        self.service_time = int(round(service_time * 10 ** precision))
         self.demand = int(demand)
-        self.ready_time = round(ready_time * 10 ** precision)
-        self.due_time = round(due_time * 10 ** precision)
+        self.ready_time = int(round(ready_time * 10 ** precision))
+        self.due_time = int(round(due_time * 10 ** precision))
         
     @property
     def x(self):

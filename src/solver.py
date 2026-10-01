@@ -9,7 +9,7 @@ from src.solution import Solution
 from src.timer import timer
 
 class Solver:
-    """ Class for the DARP exact solver using PB / SAT encoding """
+    ''' Class for the DARP exact solver using PB / SAT encoding '''
     
     def __init__(self, instance: Instance, matrices: list[np.ndarray]):
         self.instance = instance 
@@ -23,7 +23,7 @@ class Solver:
         self.constraints: list[str] = [] 
         self.objectives: list[str] = [] 
     
-    def get(self, variable: str):
+    def var(self, variable: str):
         if variable not in self.mapping:
             self.mapping[variable] = self.counter
             self.mapping_inv[self.counter] = variable
@@ -132,17 +132,17 @@ class Solver:
         nodes = self.instance.nodes
         req_num = self.instance.request_number
         
-        # Filtro de Sanidade: Isola o depósito de retorno duplicado (Nó 33) 
-        # garantindo que operamos somente do nó 0 ao 32.
+        # Ignores the return depot to avoid redundancy in the model
         n_nodes = 1 + (2 * req_num) 
         
         num_veh = len(self.matrices)
         Q = self.instance.vehicle_capacity
         
-        def to_int(val):
-            return int(round(val))
-            
-        max_time = to_int(nodes[0].due_time)
+        max_time = nodes[0].due_time
+        
+        # a_bits is the number of bits needed to represent the current time
+        # l_bits is the number of bits needed to represent the current load
+        
         a_bits = ceil(log2(max_time)) + 1 if max_time > 0 else 1
         l_bits = ceil(log2(Q)) + 1 if Q > 0 else 1
         
@@ -152,165 +152,165 @@ class Solver:
         l_powers = [2 ** b for b in range(l_bits)]
         l_neg = [-item for item in l_powers]
         
-        # Big-M estritamente largo para anular com segurança restrições desligadas
-        BIG_M = max_time + 1000000 
+        # Large Big-M to safely nullify disabled constraints
+        BIG_M = max_time + 100_000_000
         
-        # ---------------------------------------------------------
-        # 1. Restrições Básicas de Roteamento (Flow)
-        # ---------------------------------------------------------
-        
+        # Basic flow constraints for each node and vehicle
         for i in range(1, n_nodes):
-            w_out = [self.get(f'w_{i}_{j}_{v}') for v in range(num_veh) for j in range(n_nodes) if i != j]
+            w_out = [self.var(f'w_{i}_{j}_{v}') for v in range(num_veh) for j in range(n_nodes) if i != j]
             self.add_constraint_eq(None, w_out, 1)
 
         for v in range(num_veh):
-            w_0_out = [self.get(f'w_{0}_{j}_{v}') for j in range(1, n_nodes)]
+            w_0_out = [self.var(f'w_{0}_{j}_{v}') for j in range(1, n_nodes)]
             self.add_constraint_leq(None, w_0_out, 1)
             
-            w_in_0 = [self.get(f'w_{i}_{0}_{v}') for i in range(1, n_nodes)]
+            w_in_0 = [self.var(f'w_{i}_{0}_{v}') for i in range(1, n_nodes)]
             self.add_constraint_leq(None, w_in_0, 1)
             
             for i in range(1, n_nodes):
-                w_in = [self.get(f'w_{j}_{i}_{v}') for j in range(n_nodes) if i != j]
-                w_out = [self.get(f'w_{i}_{j}_{v}') for j in range(n_nodes) if i != j]
-                t_i_v = self.get(f't_{i}_{v}')
+                w_in = [self.var(f'w_{j}_{i}_{v}') for j in range(n_nodes) if i != j]
+                w_out = [self.var(f'w_{i}_{j}_{v}') for j in range(n_nodes) if i != j]
+                t_i_v = self.var(f't_{i}_{v}')
                 
                 self.add_constraint_eq([1]*len(w_in) + [-1], w_in + [t_i_v], 0)
                 self.add_constraint_eq([1]*len(w_out) + [-1], w_out + [t_i_v], 0)
 
-        # ---------------------------------------------------------
-        # 2. Precedência de Passageiros (Pickup vs Delivery)
-        # ---------------------------------------------------------
         
+        # Precedence constraints for each request (pickup before delivery)
         for i in range(1, req_num + 1):
             d = i + req_num
             for v in range(num_veh):
-                t_p_v = self.get(f't_{i}_{v}')
-                t_d_v = self.get(f't_{d}_{v}')
+                t_p_v = self.var(f't_{i}_{v}')
+                t_d_v = self.var(f't_{d}_{v}')
                 self.add_constraint_eq([1, -1], [t_p_v, t_d_v], 0)
                 
-        # ---------------------------------------------------------
-        # 3. Janelas de Tempo Iniciais
-        # ---------------------------------------------------------
-        
+        # Basic time window constraints
         for i in range(1, n_nodes):
-            a_i = [self.get(f'a_{i}_{b}') for b in range(a_bits)]
-            self.add_constraint_geq(a_powers, a_i, to_int(nodes[i].ready_time))
-            self.add_constraint_leq(a_powers, a_i, to_int(nodes[i].due_time))
+            a_i = [self.var(f'a_{i}_{b}') for b in range(a_bits)]
+            self.add_constraint_geq(a_powers, a_i, nodes[i].ready_time)
+            self.add_constraint_leq(a_powers, a_i, nodes[i].due_time)
 
+        # Depot time window constraints for each vehicle
         for v in range(num_veh):
-            start_v = [self.get(f'start_{v}_{b}') for b in range(a_bits)]
-            end_v = [self.get(f'end_{v}_{b}') for b in range(a_bits)]
+            start_v = [self.var(f'start_{v}_{b}') for b in range(a_bits)]
+            end_v = [self.var(f'end_{v}_{b}') for b in range(a_bits)]
             
-            self.add_constraint_geq(a_powers, start_v, to_int(nodes[0].ready_time))
-            self.add_constraint_leq(a_powers, start_v, to_int(nodes[0].due_time))
-            self.add_constraint_geq(a_powers, end_v, to_int(nodes[0].ready_time))
-            self.add_constraint_leq(a_powers, end_v, to_int(nodes[0].due_time))
+            self.add_constraint_geq(a_powers, start_v, nodes[0].ready_time)
+            self.add_constraint_leq(a_powers, start_v, nodes[0].due_time)
+            self.add_constraint_geq(a_powers, end_v, nodes[0].ready_time)
+            self.add_constraint_leq(a_powers, end_v, nodes[0].due_time)
 
-        # ---------------------------------------------------------
-        # 4. Continuidade do Tempo e Deslocamento Temporal 
-        # ---------------------------------------------------------
-        
+        # Time continuity constraints for each edge (i, j) in the graph for each vehicle
         for v in range(num_veh):
             for i in range(n_nodes):
                 for j in range(n_nodes):
-                    if i == j: continue
+                    if i == j: 
+                        continue
                     
                     if self.matrices[v][i, j] < 0:
-                        w_i_j_v = self.get(f'w_{i}_{j}_{v}')
+                        w_i_j_v = self.var(f'w_{i}_{j}_{v}')
                         self.add_constraint_eq(None, [w_i_j_v], 0)
                         continue
                         
-                    w_i_j_v = self.get(f'w_{i}_{j}_{v}')
-                    dist_ij = to_int(self.instance.distances[i, j])
-                    s_i = to_int(nodes[i].service_time)
+                    w_i_j_v = self.var(f'w_{i}_{j}_{v}')
+                    dist_ij = self.instance.distances[i, j]
+                    s_i = nodes[i].service_time
                     
                     if i == 0: 
-                        a_j = [self.get(f'a_{j}_{b}') for b in range(a_bits)]
-                        start_v = [self.get(f'start_{v}_{b}') for b in range(a_bits)]
-                        # Big-M Corrigido: a_j - start_v - M * w >= s_0 + dist - M
-                        self.add_constraint_geq(a_powers + a_neg + [-BIG_M], a_j + start_v + [w_i_j_v], s_i + dist_ij - BIG_M)
+                        a_j = [self.var(f'a_{j}_{b}') for b in range(a_bits)]
+                        start_v = [self.var(f'start_{v}_{b}') for b in range(a_bits)]
+                        
+                        # Big-M fixed: a_j - start_v - M * w >= s_0 + dist - M
+                        self.add_constraint_geq(
+                            a_powers + a_neg + [-BIG_M], 
+                            a_j + start_v + [w_i_j_v], 
+                            s_i + dist_ij - BIG_M
+                        )
                         
                     elif j == 0: 
-                        end_v = [self.get(f'end_{v}_{b}') for b in range(a_bits)]
-                        a_i = [self.get(f'a_{i}_{b}') for b in range(a_bits)]
-                        # Big-M Corrigido: end_v - a_i - M * w >= s_i + dist - M
-                        self.add_constraint_geq(a_powers + a_neg + [-BIG_M], end_v + a_i + [w_i_j_v], s_i + dist_ij - BIG_M)
+                        end_v = [self.var(f'end_{v}_{b}') for b in range(a_bits)]
+                        a_i = [self.var(f'a_{i}_{b}') for b in range(a_bits)]
+                        
+                        # Big-M fixed: end_v - a_i - M * w >= s_i + dist - M
+                        self.add_constraint_geq(
+                            a_powers + a_neg + [-BIG_M], 
+                            end_v + a_i + [w_i_j_v], 
+                            s_i + dist_ij - BIG_M
+                        )
                         
                     else: 
-                        a_j = [self.get(f'a_{j}_{b}') for b in range(a_bits)]
-                        a_i = [self.get(f'a_{i}_{b}') for b in range(a_bits)]
-                        # Big-M Corrigido: a_j - a_i - M * w >= s_i + dist - M
-                        self.add_constraint_geq(a_powers + a_neg + [-BIG_M], a_j + a_i + [w_i_j_v], s_i + dist_ij - BIG_M)
+                        a_j = [self.var(f'a_{j}_{b}') for b in range(a_bits)]
+                        a_i = [self.var(f'a_{i}_{b}') for b in range(a_bits)]
+                        
+                        # Big-M fixed: a_j - a_i - M * w >= s_i + dist - M
+                        self.add_constraint_geq(
+                            a_powers + a_neg + [-BIG_M], 
+                            a_j + a_i + [w_i_j_v], 
+                            s_i + dist_ij - BIG_M
+                        )
 
-        # ---------------------------------------------------------
-        # 5. DARP: Ride Time Máximo e Fluxo de Viagem
-        # ---------------------------------------------------------
+        # Ride time constraints for each request (pickup and delivery)
         
-        max_rt = to_int(self.instance.max_request_time)
+        max_rt = self.instance.max_request_time
+        
         for i in range(1, req_num + 1):
             d = i + req_num
-            a_p = [self.get(f'a_{i}_{b}') for b in range(a_bits)]
-            a_d = [self.get(f'a_{d}_{b}') for b in range(a_bits)]
-            s_p = to_int(nodes[i].service_time)
-            dist_pd = to_int(self.instance.distances[i, d])
-            
-            # Chegada D > Chegada P 
+            a_p = [self.var(f'a_{i}_{b}') for b in range(a_bits)]
+            a_d = [self.var(f'a_{d}_{b}') for b in range(a_bits)]
+            s_p = nodes[i].service_time
+            dist_pd = self.instance.distances[i, d]
+             
+            # Arrival D > Arrival P
             self.add_constraint_geq(a_powers + a_neg, a_d + a_p, s_p + dist_pd)
-            # Limite do Ride Time
+            # Ride time limit
             self.add_constraint_geq(a_powers + a_neg, a_p + a_d, -max_rt - s_p)
 
-        # ---------------------------------------------------------
-        # 6. DARP: Duração Máxima da Rota do Veículo
-        # ---------------------------------------------------------
         
-        max_vt = to_int(self.instance.max_vehicle_time)
+        # Maximum route duration constraint for each vehicle
+        max_vt = self.instance.max_vehicle_time
+        
         for v in range(num_veh):
-            start_v = [self.get(f'start_{v}_{b}') for b in range(a_bits)]
-            end_v = [self.get(f'end_{v}_{b}') for b in range(a_bits)]
+            start_v = [self.var(f'start_{v}_{b}') for b in range(a_bits)]
+            end_v = [self.var(f'end_{v}_{b}') for b in range(a_bits)]
+            
             self.add_constraint_geq(a_powers + a_neg, start_v + end_v, -max_vt)
 
-        # ---------------------------------------------------------
-        # 7. Capacidade Contínua (Flutuante de +1/-1)
-        # ---------------------------------------------------------
+        # Continuous load constraints for each node and vehicle
         
         for i in range(1, n_nodes):
-            l_i = [self.get(f'l_{i}_{b}') for b in range(l_bits)]
-            dem_i = int(nodes[i].demand)
-            self.add_constraint_geq(l_powers, l_i, max(0, dem_i))
-            self.add_constraint_leq(l_powers, l_i, min(Q, Q + dem_i))
+            l_i = [self.var(f'l_{i}_{b}') for b in range(l_bits)]
+            self.add_constraint_geq(l_powers, l_i, max(0, nodes[i].demand))
+            self.add_constraint_leq(l_powers, l_i, min(Q, Q + nodes[i].demand))
             
+        # Load continuity constraints for each edge (i, j) in the graph for each vehicle
         for v in range(num_veh):
             for i in range(n_nodes):
                 for j in range(1, n_nodes):
                     if i == j or self.matrices[v][i, j] < 0: continue
                     
-                    w_i_j_v = self.get(f'w_{i}_{j}_{v}')
-                    l_j = [self.get(f'l_{j}_{b}') for b in range(l_bits)]
-                    dem_j = int(nodes[j].demand)
+                    w_i_j_v = self.var(f'w_{i}_{j}_{v}')
+                    l_j = [self.var(f'l_{j}_{b}') for b in range(l_bits)]
+                    dem_j = nodes[j].demand
 
                     if i == 0:
                         self.add_constraint_geq(l_powers + [-Q], l_j + [w_i_j_v], dem_j - Q)
                         self.add_constraint_geq(l_neg + [-Q], l_j + [w_i_j_v], -dem_j - Q)
                     else:
-                        l_i = [self.get(f'l_{i}_{b}') for b in range(l_bits)]
+                        l_i = [self.var(f'l_{i}_{b}') for b in range(l_bits)]
                         self.add_constraint_geq(l_powers + l_neg + [-Q], l_j + l_i + [w_i_j_v], dem_j - Q)
                         self.add_constraint_geq(l_neg + l_powers + [-Q], l_j + l_i + [w_i_j_v], -dem_j - Q)
 
-        # ---------------------------------------------------------
-        # 8. Função Objetivo
-        # ---------------------------------------------------------
-        
+        # Objective: Minimize the total distance traveled by all vehicles
         for v in range(num_veh):
             for i in range(n_nodes):
                 for j in range(n_nodes):
-                    if i == j or self.matrices[v][i, j] < 0: continue
+                    if i == j or self.matrices[v][i, j] < 0: 
+                        continue
                     
-                    w_i_j_v = self.get(f'w_{i}_{j}_{v}')
-                    dist_ij = to_int(self.instance.distances[i, j])
+                    w_i_j_v = self.var(f'w_{i}_{j}_{v}')
                     
-                    if dist_ij > 0:
-                        self.add_objective(dist_ij, w_i_j_v)
+                    if self.instance.distances[i, j] > 0:
+                        self.add_objective(self.instance.distances[i, j], w_i_j_v)
 
     @timer
     def run(self) -> tuple[float, Solution]:
