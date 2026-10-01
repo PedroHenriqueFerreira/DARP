@@ -1,0 +1,26 @@
+A heurística implementada no seu arquivo `heuristic.py` é a heurística de construção e inserção paralela baseada em arrependimento (**Parallel Regret-2**). Na literatura acadêmica de otimização combinatória, a origem e a adaptação dessa estratégia ocorreram por meio de três artigos principais:
+
+* **A Origem do Método (VRPTW):** O conceito fundamental de avaliar o "arrependimento" — calculado como a diferença entre a segunda melhor e a melhor opção de inserção — foi originalmente introduzido para problemas de roteamento com janelas de tempo por **Potvin e Rousseau (1993)** no artigo *"A parallel route building algorithm for the vehicle routing and scheduling problem with time windows"*.
+
+
+* **A Adaptação para o DARP:** A versão paralela focada e adaptada especificamente para as complexas restrições de precedência e tempo do *Dial-a-Ride Problem* (DARP) foi introduzida por **M. Diana e M. M. Dessouky (2004)** no artigo influente *"A new regret insertion heuristic for solving large-scale dial-a-ride problems with time windows"*. Este é considerado o paper base que popularizou a inserção por *regret* no contexto de transporte sob demanda.
+* **Formalização e Nomenclatura (PDPTW/DARP):** O termo exato "Regret-2" (juntamente com Regret-3 e Regret-k), utilizado amplamente em códigos contemporâneos para inicialização e reparo de rotas, foi matematicamente consolidado pelo clássico artigo da heurística ALNS de **S. Ropke e D. Pisinger (2006)**: *"An Adaptive Large Neighborhood Search Heuristic for the Pickup and Delivery Problem with Time Windows"*.
+
+
+
+Para citar a introdução da estratégia exata aplicada à resolução do DARP, o artigo de referência definitivo é o de **Diana e Dessouky (2004)**.
+
+------------
+
+Na literatura de otimização combinatória, esta estratégia é formalmente conhecida como **Grafo de Compatibilidade de Requisições** (Request Compatibility Graph) ou **Vizinhança baseada em Relação de Requisições** (Request-based Relatedness Neighborhood). Em métodos híbridos que combinam heurísticas com *solvers* exatos (Matheurísticas), também é referida como **Sparsificação de Grafo Pré-processada** (Pre-processed Graph Sparsification).
+
+A sua fundação teórica baseia-se em tratar o par de recolha e entrega como um único nó lógico e indivisível, avaliando a distância e a viabilidade temporal entre pedidos completos em vez de localizações geográficas isoladas.
+
+Esta abordagem foi desenvolvida e consagrada por diversos trabalhos fundamentais no roteamento de veículos:
+
+* **Ropke e Pisinger (2006) - *An Adaptive Large Neighborhood Search Heuristic for the Pickup and Delivery Problem with Time Windows*:** Este é o trabalho mais influente a utilizar esta métrica. Os autores formalizaram a distância heurística entre requisições calculando uma "medida de relação" (relatedness) no seu operador de *Shaw Removal*. A função avalia a distância física, temporal e a capacidade entre a requisição A e a requisição B para definir a vizinhança, o que serviu de base direta para a lógica do método `request_distance` do código.
+* **Cordeau (2006) - *A Branch-and-Cut Algorithm for the Dial-a-Ride Problem*:** Cordeau definiu matematicamente a eliminação de arcos (pre-processing) através da verificação rigorosa de compatibilidade cronológica entre os nós de recolha e entrega de diferentes passageiros. O método `is_viable` que filtra os nós na classe é uma transposição das inequações de eliminação de arcos descritas para a matriz do *solver* exato.
+* **Desrosiers et al. (1995) - *Time Constrained Routing and Scheduling*:** Estabeleceu as bases teóricas demonstrando que a transformação da matriz de distâncias original num grafo temporalmente factível — cortando arcos com peso infinito sempre que há violação das restrições de tempo — é uma etapa mandatória para que algoritmos exatos não entrem em colapso computacional.
+* **Literatura Moderna de Matheurísticas (ex: Archetti et al., 2017; Parragh e Schmid, 2013):** Diversos trabalhos contemporâneos que fundem heurísticas construtivas com *solvers* de Programação Inteira Mista (MIP/PB) utilizam a extração destes *clusters* restritos de requisições compatíveis. O objetivo é fornecer ao *solver* subgrafos altamente promissores e logicamente fechados, permitindo reconstruir e otimizar rotas sem lidar com a totalidade combinatória do problema original.
+
+A aplicação desta estratégia assegura que a capacidade de pesquisa do *solver* seja gasta apenas a avaliar permutações que funcionam cronologicamente no terreno, eliminando o ruído provocado por vizinhos próximos que se encontram em horizontes temporais incompatíveis.
