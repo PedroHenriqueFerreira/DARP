@@ -76,6 +76,7 @@ class Route:
             load += node.demand
             
             if load < 0 or load > self.instance.vehicle_capacity:
+                # print("CAPACITY FAILURE", self.nodes, load, node.id)
                 return self.set_unfeasible()
                 
             if node.demand > 0:
@@ -83,6 +84,12 @@ class Route:
             elif node.demand < 0:
                 pickup_id = node.id - self.instance.request_number
                 if pickup_id not in visited_pickup_ids:
+                    # print(
+                    #     "PRECEDENCE FAILURE",
+                    #     self.nodes,
+                    #     "delivery =", node.id,
+                    #     "pickup =", pickup_id,
+                    # )
                     return self.set_unfeasible()
 
         # Bound Propagation (STP)
@@ -121,6 +128,15 @@ class Route:
                 
                 # Failure: Cannot arrive before the final limit
                 if E[i] > L[i]:
+                    # print(
+                    #     "TIME WINDOW FAILURE",
+                    #     self.nodes,
+                    #     "iteration =", _,
+                    #     "position =", i,
+                    #     "node =", nodes[i].id,
+                    #     "E =", E[i],
+                    #     "L =", L[i],
+                    # )
                     return self.set_unfeasible()
                     
             # Backward Pass: Travel Times & Time Windows
@@ -133,6 +149,15 @@ class Route:
                     changed = True
                 
                 if E[i] > L[i]:
+                    # print(
+                    #     "TIME WINDOW FAILURE",
+                    #     self.nodes,
+                    #     "iteration =", _,
+                    #     "position =", i,
+                    #     "node =", nodes[i].id,
+                    #     "E =", E[i],
+                    #     "L =", L[i],
+                    # )
                     return self.set_unfeasible()
 
             # Ride time constraints (B_d - B_p - s_p <= self.instance.max_request_time)
@@ -145,6 +170,15 @@ class Route:
                     changed = True
                     
                 if E[p] > L[p]:
+                    # print(
+                    #     "TIME WINDOW FAILURE",
+                    #     self.nodes,
+                    #     "iteration =", _,
+                    #     "position =", p,
+                    #     "node =", nodes[p].id,
+                    #     "E =", E[p],
+                    #     "L =", L[p],
+                    # )
                     return self.set_unfeasible()
                     
                 # Force the delivery to happen as early as possible
@@ -153,6 +187,15 @@ class Route:
                     L[d] = max_d
                     changed = True
                 if E[d] > L[d]:
+                    # print(
+                    #     "TIME WINDOW FAILURE",
+                    #     self.nodes,
+                    #     "iteration =", _,
+                    #     "position =", d,
+                    #     "node =", nodes[d].id,
+                    #     "E =", E[d],
+                    #     "L =", L[d],
+                    # )
                     return self.set_unfeasible()
 
             # Maximum route duration constraint (B_{end} - B_{start} <= max_vehicle_time)
@@ -163,6 +206,15 @@ class Route:
                 changed = True
                 
             if E[0] > L[0]:
+                # print(
+                #     "TIME WINDOW FAILURE",
+                #     self.nodes,
+                #     "iteration =", _,
+                #     "position =", 0,
+                #     "node =", nodes[0].id,
+                #     "E =", E[0],
+                #     "L =", L[0],
+                # )
                 return self.set_unfeasible()
             
             max_last = L[0] + self.instance.max_vehicle_time
@@ -171,12 +223,22 @@ class Route:
                 changed = True
                 
             if E[len(nodes) - 1] > L[len(nodes) - 1]:
+                # print(
+                #     "TIME WINDOW FAILURE",
+                #     self.nodes,
+                #     "iteration =", _,
+                #     "position =", len(nodes) - 1,
+                #     "node =", nodes[len(nodes) - 1].id,
+                #     "E =", E[len(nodes) - 1],
+                #     "L =", L[len(nodes) - 1],
+                # )
                 return self.set_unfeasible()
                 
             if not changed:
                 break
         else:
             # The temporal bounds are logically unsatisfiable if the algorithm does not converge within the mathematical limit of nodes. This indicates that the constraints cannot be satisfied simultaneously, leading to an infeasible route.
+            # print('Temporal bounds are logically unsatisfiable. The algorithm did not converge within the mathematical limit of nodes.')
             return self.set_unfeasible()
 
         return self.set_feasible()

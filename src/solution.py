@@ -10,20 +10,22 @@ class Solution:
         self.routes = routes
         self._cost: float | None = None
     
-    def validate(self) -> bool:
+    def validate(self) -> tuple[bool, str]:
         all_nodes = [node.id for node in self.instance.nodes[1:-1]]
         route_nodes = [id for route in self.routes for id in route.nodes]
         
-        if not all(route.feasible for route in self.routes):
-            return False
+        if any(not route.feasible for route in self.routes):
+            route = next(route for route in self.routes if not route.feasible)
+            
+            return False, f'Infeable route found: {route}'
         
         if len(set(route_nodes)) != len(route_nodes):
-            return False
+            return False, 'Duplicate nodes found in routes'
         
         if sorted(route_nodes) != all_nodes:
-            return False
+            return False, 'Nodes in routes do not match all nodes'
         
-        return True
+        return True, 'Solution is valid'
     
     @property
     def cost(self) -> float:
