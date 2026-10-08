@@ -4,16 +4,7 @@ from src.timer import timer
 from src.solution import Solution
 
 class Heuristic:
-    '''
-    Parallel Regret-2 construction heuristic for the DARP.
-
-    At each iteration:
-        1. Find all feasible insertions for every unserved request.
-        2. For each request, keep its two best insertions.
-        3. Calculate its regret:
-               regret = second_best_cost - best_cost
-        4. Insert the request with the largest regret.
-    '''
+    ''' Parallel Regret-2 construction heuristic for the DARP with Insertion Caching '''
 
     def __init__(self, instance: Instance):
         self.instance = instance
@@ -25,8 +16,16 @@ class Heuristic:
         vehicle_n = self.instance.vehicle_number
 
         routes = [Route(self.instance, []) for _ in range(vehicle_n)]
-
         unserved = set((nodes[i], nodes[i + request_n]) for i in range(1, request_n + 1))
+        
+        cache = {}
+
+        for request in unserved:
+            for route_index, route in enumerate(routes):
+                if new_route := route.best_insertion(request):
+                    cache[(request, route_index)] = (new_route.cost - route.cost, new_route)
+                else:
+                    cache[(request, route_index)] = (float('inf'), None)
         
         while unserved:
             candidates = []
@@ -35,19 +34,20 @@ class Heuristic:
                 best_insertion = None
                 second_best_cost = float('inf')
 
-                for route_index, route in enumerate(routes):
-                    if new_route := route.best_insertion(request):
-                        increase = new_route.cost - route.cost
+                for route_index in range(len(routes)):
+                    increase, new_route = cache[(request, route_index)]
+                    
+                    if increase == float('inf'):
+                        continue
                         
-                        if best_insertion is None or increase < best_insertion[0]:
-                            if best_insertion is not None:
-                                second_best_cost = best_insertion[0]
-                            best_insertion = (increase, route_index, new_route)
-                            
-                        elif increase < second_best_cost:
-                            second_best_cost = increase
+                    if best_insertion is None or increase < best_insertion[0]:
+                        if best_insertion is not None:
+                            second_best_cost = best_insertion[0]
+                        best_insertion = (increase, route_index, new_route)
+                        
+                    elif increase < second_best_cost:
+                        second_best_cost = increase
 
-                # Se não encontrou nenhuma inserção viável
                 if best_insertion is None:
                     continue
 
@@ -62,7 +62,12 @@ class Heuristic:
             regret, _, route_index, request, new_route = min(candidates, key=lambda x: (-x[0], x[1]))
 
             routes[route_index] = new_route
-
             unserved.remove(request)
+
+            for remaining_request in unserved:
+                if updated_route := new_route.best_insertion(remaining_request):
+                    cache[(remaining_request, route_index)] = (updated_route.cost - new_route.cost, updated_route)
+                else:
+                    cache[(remaining_request, route_index)] = (float('inf'), None)
 
         return Solution(self.instance, [r for r in routes if len(r) > 0])

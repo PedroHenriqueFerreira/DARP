@@ -37,7 +37,7 @@ class Neighbors:
         
         for route in self.solution.routes:
             matrix = np.full(
-                (len(self.instance.nodes), len(self.instance.nodes)), -1, dtype=np.long
+                (len(self.instance.nodes), len(self.instance.nodes)), -1, dtype=np.int64
             )
             
             for i in range(len(self.instance.nodes)):

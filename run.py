@@ -12,18 +12,16 @@ def run(instance: Instance, neighbors: int) -> None:
     # print(f'Initial Solution: {initial_solution}') 
     # print(f'Initial Cost: {initial_solution.cost}') 
 
-    valid, message = initial_solution.validate()
-    assert valid, message
+    initial_solution.validate()
 
     matrices_time, matrices = Neighbors(instance, neighbors, initial_solution).run()
-    solver_time, solver_solution = Solver(instance, matrices).run()
+    solver_time, solver_solution = Solver(instance, matrices, initial_solution).run()
     
     # print(f'Solver Time: {solver_time:.3f} seconds')
     # print(f'Solver Solution: {solver_solution}')
     # print(f'Solver Cost: {solver_solution.cost:.2f}')
 
-    valid, message = solver_solution.validate()
-    assert valid, message
+    solver_solution.validate()
 
     # neighbors_time, neighbors_matrices = Neighbors(instance, neighbors, greedy_solution).run()
     

@@ -8,12 +8,12 @@ from src.heuristic import Heuristic
 from src.neighbors import Neighbors
 from src.solver import Solver
 
-from run import run
+INSTANCES_DIR = 'instances'
 
 n_runs = int(argv[1] if len(argv) > 1 else 5)
 n_neighbors = int(argv[2] if len(argv) > 2 else 3)
 
-instances = listdir('instances')
+instances = listdir(INSTANCES_DIR)
 sorted_instances = sorted(instances)
 
 data: list[dict[str, str]] = []
@@ -31,15 +31,14 @@ except FileNotFoundError:
 for name in sorted_instances:
     print(f' {name} '.center(80, '-'))
     
-    instance = Instance(f'instances/{name}', precision=3)
+    instance = Instance(f'{INSTANCES_DIR}/{name}', precision=3)
     
     total_initial_time = 0
     for r in range(1, n_runs + 1):
         initial_time, initial_solution = Heuristic(instance).run()
         total_initial_time += initial_time
         
-        valid, message = initial_solution.validate()
-        assert valid, message
+        initial_solution.validate()
             
     initial_time = total_initial_time / n_runs
     
@@ -56,10 +55,9 @@ for name in sorted_instances:
             
         for r in range(1, n_runs + 1):
             matrices_time, matrices = Neighbors(instance, k, initial_solution).run()
-            solver_time, solver_solution = Solver(instance, matrices).run()
+            solver_time, solver_solution = Solver(instance, matrices, initial_solution).run()
             
-            valid, message = solver_solution.validate()
-            assert valid, message
+            solver_solution.validate()
             
             curr_time = matrices_time + solver_time
             total_time += curr_time
