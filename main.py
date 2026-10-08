@@ -64,7 +64,7 @@ for name in sorted_instances:
             
             print(
                 f'Run [{r} / {n_runs}] - ' 
-                f'Time: [{curr_time:.3f}] - '
+                f'Time: [{curr_time:.3f}s] - '
                 f'Cost: [{initial_solution.cost:.3f} -> {solver_solution.cost:.3f}]'
             )
             

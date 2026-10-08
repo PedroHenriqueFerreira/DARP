@@ -1,3 +1,0 @@
-Instance errors:
-b3-24.txt
-b4-24.txt
