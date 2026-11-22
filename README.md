@@ -22,6 +22,7 @@ Python implementation for solving the Dial-a-Ride Problem (DARP) through a three
 │   └── timer.py        # Decorator for execution time measurement
 ├── main.py             # Batch execution (benchmark) and CSV export
 ├── run.py              # Single instance execution via CLI
+├── ablation_stg2.py    # Stage 2 ablation (k-neighbors vs. full graph) and CSV export
 └── requirements.txt    # Project dependencies
 ```
 
@@ -45,6 +46,8 @@ pip install -r requirements.txt
 
 ## Usage
 
+Run all commands from the project root, with the virtual environment activated.
+
 ### Single Execution (`run.py`)
 
 Runs the complete pipeline for a single instance and displays time and cost metrics in the terminal.
@@ -61,7 +64,7 @@ python run.py instances/a2-16.txt 3
 
 ### Batch Execution (`main.py`)
 
-Processes all instances in the `instances/` directory, running multiple trials and varying the neighborhood size from $1$ to $k$. Average results are automatically saved to `results.csv` (supports resuming if the file already exists).
+Processes all instances in the `instances/` directory, running multiple trials and varying the neighborhood size from $1$ to $k$ and averaging the results.
 
 ```bash
 python main.py [num_runs] [max_neighbors]
@@ -75,3 +78,23 @@ Example:
 ```bash
 python main.py 5 3
 ```
+
+After running, check the output file `results.csv` (supports resuming if the file already exists).
+
+### Stage 2 Ablation (`ablation_stg2.py`)
+
+Compares the CP-SAT solver on the $k$-neighbors graph ($k = 1, \dots, \text{max\_neighbors}$) against the full graph, for every instance in `instances/` (time limit of 120 s per run).
+
+```bash
+python ablation_stg2.py [max_neighbors]
+```
+
+* `max_neighbors`: Maximum value of $k$ tested (default: `3`).
+
+Example:
+
+```bash
+python ablation_stg2.py 3
+```
+
+After running, check the output file `ablation_results.csv` (overwritten at each execution).
