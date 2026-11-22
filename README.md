@@ -83,7 +83,7 @@ After running, check the output file `results.csv` (supports resuming if the fil
 
 ### Stage 2 Ablation (`ablation_stg2.py`)
 
-Compares the CP-SAT solver on the $k$-neighbors graph ($k = 1, \dots, \text{max\_neighbors}$) against the full graph, for every instance in `instances/` (time limit of 120 s per run).
+Compares the CP-SAT solver on the $k$-neighbors graph (for $k$ from $1$ to `max_neighbors`) against the full graph, for every instance in `instances/` (time limit of 120 s per run).
 
 ```bash
 python ablation_stg2.py [max_neighbors]
