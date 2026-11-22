@@ -22,10 +22,14 @@ class Solver:
         matrices: list[np.ndarray], 
         initial_solution: Solution,
         time_limit: int = 120,
+        num_workers: int = 8,
+        random_seed: int = 42,
     ):
         self.instance = instance 
         self.matrices = matrices 
         self.time_limit = time_limit
+        self.num_workers = num_workers
+        self.random_seed = random_seed
         self.initial_solution = initial_solution
         
         self.model = cp_model.CpModel()
@@ -171,9 +175,14 @@ class Solver:
         
         solver = cp_model.CpSolver()
         solver.parameters.max_time_in_seconds = self.time_limit
+        solver.parameters.num_search_workers = self.num_workers
+        solver.parameters.random_seed = self.random_seed
         solver.parameters.log_search_progress = False 
         
         status = solver.Solve(self.model)
+        self.last_solver = solver
+
+        proto = solver.ResponseProto()
 
         if status not in (cp_model.OPTIMAL, cp_model.FEASIBLE):
             raise Exception('It was not possible to find a solution (UNSATISFIABLE or Timeout).')

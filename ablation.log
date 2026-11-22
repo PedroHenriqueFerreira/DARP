@@ -1,0 +1,121 @@
+nohup: ignoring input
+---------------------------------- a2-16.txt -----------------------------------
+[k_1] Cost: 314.130 -> 310.294 | Gap: 0.00% | Time: 0.157s | Arcs: 644 | Conflicts: 29
+[k_2] Cost: 314.130 -> 295.834 | Gap: 0.00% | Time: 0.512s | Arcs: 857 | Conflicts: 0
+[k_3] Cost: 314.130 -> 294.249 | Gap: 0.00% | Time: 0.765s | Arcs: 974 | Conflicts: 0
+[Full_Graph] Cost: 314.130 -> 294.249 | Gap: 0.00% | Time: 1.118s | Arcs: 1096 | Conflicts: 0
+---------------------------------- a2-20.txt -----------------------------------
+[k_1] Cost: 366.540 -> 355.042 | Gap: 0.00% | Time: 0.414s | Arcs: 990 | Conflicts: 55
+[k_2] Cost: 366.540 -> 347.102 | Gap: 0.00% | Time: 0.850s | Arcs: 1255 | Conflicts: 9
+[k_3] Cost: 366.540 -> 347.102 | Gap: 0.00% | Time: 0.720s | Arcs: 1255 | Conflicts: 9
+[Full_Graph] Cost: 366.540 -> 344.834 | Gap: 0.00% | Time: 3.560s | Arcs: 1700 | Conflicts: 0
+---------------------------------- a2-24.txt -----------------------------------
+[k_1] Cost: 455.332 -> 455.332 | Gap: 0.00% | Time: 0.256s | Arcs: 1268 | Conflicts: 78
+[k_2] Cost: 455.332 -> 446.361 | Gap: 0.00% | Time: 0.630s | Arcs: 1582 | Conflicts: 70
+[k_3] Cost: 455.332 -> 441.172 | Gap: 0.00% | Time: 1.436s | Arcs: 1886 | Conflicts: 21
+[Full_Graph] Cost: 455.332 -> 431.121 | Gap: 0.00% | Time: 3.950s | Arcs: 2414 | Conflicts: 0
+---------------------------------- a3-18.txt -----------------------------------
+[k_1] Cost: 328.176 -> 327.334 | Gap: 0.00% | Time: 0.118s | Arcs: 501 | Conflicts: 1
+[k_2] Cost: 328.176 -> 311.505 | Gap: 0.00% | Time: 0.357s | Arcs: 808 | Conflicts: 0
+[k_3] Cost: 328.176 -> 301.115 | Gap: 0.00% | Time: 0.960s | Arcs: 1080 | Conflicts: 2
+[Full_Graph] Cost: 328.176 -> 300.480 | Gap: 0.00% | Time: 17.723s | Arcs: 2133 | Conflicts: 0
+---------------------------------- a3-24.txt -----------------------------------
+[k_1] Cost: 389.081 -> 385.066 | Gap: 0.00% | Time: 0.400s | Arcs: 1116 | Conflicts: 13
+[k_2] Cost: 389.081 -> 360.873 | Gap: 0.00% | Time: 1.354s | Arcs: 1582 | Conflicts: 0
+[k_3] Cost: 389.081 -> 360.113 | Gap: 0.00% | Time: 4.788s | Arcs: 2065 | Conflicts: 0
+[Full_Graph] Cost: 389.081 -> 344.835 | Gap: 0.00% | Time: 54.213s | Arcs: 3684 | Conflicts: 117
+---------------------------------- a3-30.txt -----------------------------------
+[k_1] Cost: 553.499 -> 553.219 | Gap: 0.00% | Time: 0.292s | Arcs: 1332 | Conflicts: 33
+[k_2] Cost: 553.499 -> 552.784 | Gap: 0.00% | Time: 0.630s | Arcs: 1994 | Conflicts: 65
+[k_3] Cost: 553.499 -> 549.440 | Gap: 0.00% | Time: 1.583s | Arcs: 2357 | Conflicts: 82
+[Full_Graph] Cost: 553.499 -> 494.849 | Gap: 0.00% | Time: 94.356s | Arcs: 5694 | Conflicts: 0
+---------------------------------- a3-36.txt -----------------------------------
+[k_1] Cost: 624.902 -> 599.851 | Gap: 0.00% | Time: 1.126s | Arcs: 2727 | Conflicts: 3
+[k_2] Cost: 624.902 -> 584.166 | Gap: 0.00% | Time: 5.724s | Arcs: 4095 | Conflicts: 1
+[k_3] Cost: 624.902 -> 583.293 | Gap: 0.00% | Time: 8.447s | Arcs: 5010 | Conflicts: 0
+[Full_Graph] Cost: 624.902 -> 583.182 | Gap: 0.00% | Time: 119.809s | Arcs: 8097 | Conflicts: 0
+---------------------------------- a4-16.txt -----------------------------------
+[k_1] Cost: 294.939 -> 294.939 | Gap: 0.00% | Time: 0.215s | Arcs: 529 | Conflicts: 10
+[k_2] Cost: 294.939 -> 287.623 | Gap: 0.00% | Time: 0.916s | Arcs: 869 | Conflicts: 0
+[k_3] Cost: 294.939 -> 287.623 | Gap: 0.00% | Time: 2.997s | Arcs: 1134 | Conflicts: 8
+[Full_Graph] Cost: 294.939 -> 282.678 | Gap: 0.00% | Time: 49.225s | Arcs: 2328 | Conflicts: 0
+---------------------------------- a4-24.txt -----------------------------------
+[k_1] Cost: 436.688 -> 410.890 | Gap: 0.00% | Time: 0.954s | Arcs: 1319 | Conflicts: 2
+[k_2] Cost: 436.688 -> 402.534 | Gap: 0.00% | Time: 4.881s | Arcs: 2083 | Conflicts: 8
+[k_3] Cost: 436.688 -> 392.761 | Gap: 0.00% | Time: 6.945s | Arcs: 2251 | Conflicts: 11
+[Full_Graph] Cost: 436.688 -> 375.025 | Gap: 1.90% | Time: 120.291s | Arcs: 4952 | Conflicts: 0
+---------------------------------- a4-32.txt -----------------------------------
+[k_1] Cost: 538.275 -> 534.884 | Gap: 0.00% | Time: 0.557s | Arcs: 1672 | Conflicts: 17
+[k_2] Cost: 538.275 -> 534.884 | Gap: 0.00% | Time: 1.543s | Arcs: 2470 | Conflicts: 1
+[k_3] Cost: 538.275 -> 534.884 | Gap: 0.00% | Time: 4.960s | Arcs: 3196 | Conflicts: 7
+[Full_Graph] Cost: 538.275 -> 486.576 | Gap: 26.31% | Time: 121.068s | Arcs: 8684 | Conflicts: 1
+---------------------------------- a4-40.txt -----------------------------------
+[k_1] Cost: 700.129 -> 683.531 | Gap: 0.00% | Time: 3.031s | Arcs: 3292 | Conflicts: 3
+[k_2] Cost: 700.129 -> 618.774 | Gap: 0.00% | Time: 18.604s | Arcs: 4705 | Conflicts: 29
+[k_3] Cost: 700.129 -> 597.345 | Gap: 0.00% | Time: 71.289s | Arcs: 5712 | Conflicts: 0
+[Full_Graph] Cost: 700.129 -> 577.084 | Gap: 27.22% | Time: 121.310s | Arcs: 13456 | Conflicts: 111
+---------------------------------- a4-48.txt -----------------------------------
+[k_1] Cost: 765.196 -> 761.636 | Gap: 0.00% | Time: 2.393s | Arcs: 3640 | Conflicts: 57
+[k_2] Cost: 765.196 -> 749.513 | Gap: 0.00% | Time: 30.717s | Arcs: 5812 | Conflicts: 0
+[k_3] Cost: 765.196 -> 720.545 | Gap: 0.00% | Time: 114.619s | Arcs: 7447 | Conflicts: 20
+[Full_Graph] Cost: 765.196 -> 689.399 | Gap: 40.81% | Time: 121.135s | Arcs: 19308 | Conflicts: 0
+---------------------------------- a5-40.txt -----------------------------------
+[k_1] Cost: 596.677 -> 569.378 | Gap: 0.00% | Time: 2.811s | Arcs: 2786 | Conflicts: 118
+[k_2] Cost: 596.677 -> 554.796 | Gap: 0.00% | Time: 13.797s | Arcs: 4222 | Conflicts: 0
+[k_3] Cost: 596.677 -> 534.757 | Gap: 0.00% | Time: 69.510s | Arcs: 5537 | Conflicts: 0
+[Full_Graph] Cost: 596.677 -> 531.553 | Gap: 39.77% | Time: 121.189s | Arcs: 13528 | Conflicts: 0
+---------------------------------- a5-50.txt -----------------------------------
+[k_1] Cost: 822.202 -> 791.537 | Gap: 0.00% | Time: 3.758s | Arcs: 4552 | Conflicts: 101
+[k_2] Cost: 822.202 -> 785.267 | Gap: 0.00% | Time: 53.294s | Arcs: 7096 | Conflicts: 44
+[k_3] Cost: 822.202 -> 766.002 | Gap: 17.64% | Time: 120.441s | Arcs: 8832 | Conflicts: 15
+[Full_Graph] Cost: 822.202 -> 710.418 | Gap: 43.29% | Time: 121.284s | Arcs: 21020 | Conflicts: 0
+---------------------------------- a5-60.txt -----------------------------------
+[k_1] Cost: 1030.638 -> 1004.765 | Gap: 0.00% | Time: 7.860s | Arcs: 5467 | Conflicts: 19
+[k_2] Cost: 1030.638 -> 985.261 | Gap: 0.00% | Time: 47.620s | Arcs: 8634 | Conflicts: 0
+[k_3] Cost: 1030.638 -> 924.070 | Gap: 15.51% | Time: 120.851s | Arcs: 11957 | Conflicts: 25
+[Full_Graph] Cost: 1030.638 -> 897.475 | Gap: 52.33% | Time: 121.906s | Arcs: 30012 | Conflicts: 0
+---------------------------------- a6-48.txt -----------------------------------
+[k_1] Cost: 702.209 -> 686.230 | Gap: 0.00% | Time: 5.717s | Arcs: 3744 | Conflicts: 87
+[k_2] Cost: 702.209 -> 686.230 | Gap: 0.00% | Time: 44.039s | Arcs: 5843 | Conflicts: 60
+[k_3] Cost: 702.209 -> 672.650 | Gap: 3.58% | Time: 120.362s | Arcs: 8152 | Conflicts: 54
+[Full_Graph] Cost: 702.209 -> 641.086 | Gap: 45.20% | Time: 121.649s | Arcs: 24485 | Conflicts: 0
+---------------------------------- a6-60.txt -----------------------------------
+[k_1] Cost: 977.821 -> 941.001 | Gap: 0.00% | Time: 5.663s | Arcs: 5079 | Conflicts: 96
+[k_2] Cost: 977.821 -> 927.857 | Gap: 0.00% | Time: 109.425s | Arcs: 8879 | Conflicts: 83
+[k_3] Cost: 977.821 -> 910.676 | Gap: 14.50% | Time: 120.776s | Arcs: 11787 | Conflicts: 1
+[Full_Graph] Cost: 977.821 -> 921.324 | Gap: 56.80% | Time: 123.296s | Arcs: 37750 | Conflicts: 0
+---------------------------------- a6-72.txt -----------------------------------
+[k_1] Cost: 1077.163 -> 1021.259 | Gap: 0.00% | Time: 9.814s | Arcs: 7461 | Conflicts: 359
+[k_2] Cost: 1077.163 -> 1017.697 | Gap: 0.00% | Time: 88.479s | Arcs: 12127 | Conflicts: 171
+[k_3] Cost: 1077.163 -> 1020.854 | Gap: 22.34% | Time: 120.925s | Arcs: 17597 | Conflicts: 10
+[Full_Graph] Cost: 1077.163 -> 1004.526 | Gap: 48.52% | Time: 122.805s | Arcs: 53820 | Conflicts: 0
+---------------------------------- a7-56.txt -----------------------------------
+[k_1] Cost: 894.482 -> 858.727 | Gap: 0.00% | Time: 4.987s | Arcs: 4702 | Conflicts: 130
+[k_2] Cost: 894.482 -> 830.798 | Gap: 0.00% | Time: 84.937s | Arcs: 6933 | Conflicts: 66
+[k_3] Cost: 894.482 -> 817.642 | Gap: 8.07% | Time: 120.588s | Arcs: 9383 | Conflicts: 32
+[Full_Graph] Cost: 894.482 -> 806.976 | Gap: 50.87% | Time: 122.723s | Arcs: 33085 | Conflicts: 0
+---------------------------------- a7-70.txt -----------------------------------
+[k_1] Cost: 1067.733 -> 1045.856 | Gap: 0.00% | Time: 8.793s | Arcs: 6453 | Conflicts: 6
+[k_2] Cost: 1067.733 -> 1014.430 | Gap: 0.00% | Time: 90.499s | Arcs: 10690 | Conflicts: 38
+[k_3] Cost: 1067.733 -> 1012.358 | Gap: 12.99% | Time: 121.663s | Arcs: 14600 | Conflicts: 87
+[Full_Graph] Cost: 1067.733 -> 1023.960 | Gap: 53.54% | Time: 123.056s | Arcs: 40944 | Conflicts: 0
+---------------------------------- a7-84.txt -----------------------------------
+[k_1] Cost: 1321.745 -> 1294.502 | Gap: 0.00% | Time: 26.532s | Arcs: 9673 | Conflicts: 295
+[k_2] Cost: 1321.745 -> 1287.919 | Gap: 15.25% | Time: 120.921s | Arcs: 16170 | Conflicts: 0
+[k_3] Cost: 1321.745 -> 1262.912 | Gap: 40.38% | Time: 121.170s | Arcs: 22491 | Conflicts: 0
+[Full_Graph] Cost: 1321.745 -> 1250.787 | Gap: 67.63% | Time: 123.458s | Arcs: 73350 | Conflicts: 0
+---------------------------------- a8-64.txt -----------------------------------
+[k_1] Cost: 875.607 -> 853.446 | Gap: 0.00% | Time: 5.545s | Arcs: 5369 | Conflicts: 98
+[k_2] Cost: 875.607 -> 845.561 | Gap: 0.00% | Time: 76.994s | Arcs: 8885 | Conflicts: 56
+[k_3] Cost: 875.607 -> 829.827 | Gap: 8.34% | Time: 120.829s | Arcs: 12437 | Conflicts: 0
+[Full_Graph] Cost: 875.607 -> 838.460 | Gap: 52.62% | Time: 123.124s | Arcs: 43175 | Conflicts: 0
+---------------------------------- a8-80.txt -----------------------------------
+[k_1] Cost: 1164.383 -> 1154.685 | Gap: 0.00% | Time: 18.015s | Arcs: 9292 | Conflicts: 76
+[k_2] Cost: 1164.383 -> 1117.955 | Gap: 5.88% | Time: 120.786s | Arcs: 14302 | Conflicts: 0
+[k_3] Cost: 1164.383 -> 1132.308 | Gap: 29.27% | Time: 122.376s | Arcs: 20888 | Conflicts: 0
+[Full_Graph] Cost: 1164.383 -> 1114.650 | Gap: 62.34% | Time: 123.414s | Arcs: 66855 | Conflicts: 0
+---------------------------------- a8-96.txt -----------------------------------
+[k_1] Cost: 1531.930 -> 1475.283 | Gap: 0.00% | Time: 41.387s | Arcs: 11586 | Conflicts: 67
+[k_2] Cost: 1531.930 -> 1420.382 | Gap: 11.37% | Time: 120.850s | Arcs: 18044 | Conflicts: 79
+[k_3] Cost: 1531.930 -> 1461.406 | Gap: 34.21% | Time: 121.722s | Arcs: 25187 | Conflicts: 78
+[Full_Graph] Cost: 1531.930 -> 1506.276 | Gap: 85.32% | Time: 129.643s | Arcs: 133917 | Conflicts: 0

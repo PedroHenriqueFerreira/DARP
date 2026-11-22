@@ -7,9 +7,9 @@ from src.timer import timer
 class Neighbors:
     ''' Neighborhood focused on the indivisibility of requests for the DARP '''
     
-    def __init__(self, instance: Instance, k: int, solution: Solution):
+    def __init__(self, instance: Instance, k: int, solution: Solution, full_graph: bool = False):
         self.instance = instance
-        self.k = k
+        self.k = instance.request_number if full_graph else k
         self.solution = solution
     
     def is_edge_feasible(self, i: int, j: int) -> bool:
